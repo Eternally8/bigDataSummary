@@ -127,13 +127,12 @@ public class Orc2Hfile extends BaseMR {
         job.setInputFormatClass(OrcNewInputFormat.class);
         //下面的代码都是围绕着HfileOutputFormat2.configureIncrmentalLoad()去写的
         Configuration hbaseConf = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(conf);
+        Connection conn = ConnectionFactory.createConnection(hbaseConf);
         TableName tableName = TableName.valueOf(conf.get(Constants.HBASE_TABLE_NAME_ATTR));
         //生成hfile文件的api
         HFileOutputFormat2.configureIncrementalLoad(job,conn.getTable(tableName),conn.getRegionLocator(tableName));
         FileInputFormat.addInputPath(job, getFirstJobInputPath());
         FileOutputFormat.setOutputPath(job,getJobOutputPath(getJobNameWithTaskId()));
-
         return job;
     }
 
